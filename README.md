@@ -3,10 +3,11 @@
 ## Overview
 This script allows you to **restrict a user’s access** to specific directories while **blocking access to all other directories** inside a given root directory. It uses **Linux permissions and ACLs (Access Control Lists)** to achieve this.
 
-- ✅ Restricts user access to a root directory (`/opt/lampp/htdocs` by default)
-- ✅ Allows access to only specified directories
-- ✅ Prevents listing of the parent directory
-- ✅ Automatically installs ACL if missing
+### Features
+- ✅ Restricts user access to a specified root directory (`/opt/lampp/htdocs` by default)
+- ✅ Allows access to **only** specified directories inside the root directory
+- ✅ Prevents directory listing for restricted users
+- ✅ Automatically installs **ACL** if missing
 - ✅ Ensures security by restricting access to all other directories and files
 
 ## Repository Information
@@ -14,6 +15,7 @@ This script allows you to **restrict a user’s access** to specific directories
 - **Clone the Repository:**
   ```bash
   git clone https://github.com/Lalatenduswain/restrict_user_access_to_dir.git
+  cd restrict_user_access_to_dir
   ```
 
 ## Prerequisites
@@ -47,11 +49,18 @@ When you run the script, it will prompt for:
 1. **Username** – The user whose access you want to restrict.
 2. **Base Directory** – The root directory where access needs to be managed.
 3. **Allowed Directories** – A list of directories where the user should have full access.
+4. **Web Server Group** – Select the appropriate group (`www-data`, `web-data`, `apache`, or `daemon`).
 
-Example:
+Example Input:
 ```
 Enter the username to restrict: dummyuser
-Enter the base directory (default: /opt/lampp/htdocs):
+Enter the web project directory (default: /var/www/html):
+Select the web server group:
+  1. web-data
+  2. www-data
+  3. apache
+  4. daemon
+Enter the base directory to restrict access (default: /opt/lampp/htdocs):
 Enter the directories the user should access (comma-separated): project1,project2
 ```
 
@@ -66,8 +75,9 @@ Enter the directories the user should access (comma-separated): project1,project
 ### **3️⃣ Restricts Access to All Other Directories**
 - Ensures that any other directory inside the root path is **blocked** for the user.
 - Files are set to `640` (only readable by owner and group).
+- Directories are set to `750` (ensuring the user cannot list them).
 
-## Example of Expected Behavior
+## Expected Behavior
 | Action | Expected Behavior |
 |--------|------------------|
 | `ls /opt/lampp/htdocs/` | ❌ Permission denied |
@@ -75,10 +85,21 @@ Enter the directories the user should access (comma-separated): project1,project
 | `ls /opt/lampp/htdocs/project1/` | ✅ Allowed |
 | `cd /opt/lampp/htdocs/otherdir/` | ❌ Permission denied |
 
-## Disclaimer | Running the Script
-**Author:** Lalatendu Swain | [GitHub](https://github.com/Lalatenduswain) | [Website](https://blog.lalatendu.info/)
+## Example Permission Structure
+After running the script, permissions will be set as follows:
+```bash
+/opt/lampp/htdocs (750, owned by daemon)
+│-- project1 (rwx for user, 750)
+│-- project2 (rwx for user, 750)
+│-- otherdir (Restricted, 750)
+```
 
-This script is provided as-is and may require modifications or updates based on your specific environment and requirements. Use it at your own risk. The authors of the script are not liable for any damages or issues caused by its usage.
+## Disclaimer | Running the Script
+**Author:** Lalatendu Swain  
+**GitHub:** [Lalatenduswain](https://github.com/Lalatenduswain)  
+**Website:** [blog.lalatendu.info](https://blog.lalatendu.info)
+
+This script is provided as-is and may require modifications or updates based on your specific environment and requirements. Use it at your own risk. The author is not liable for any damages or issues caused by its usage.
 
 ## Donations
 If you find this script useful and want to show your appreciation, you can donate via [Buy Me a Coffee](https://www.buymeacoffee.com/lalatendu.swain).
