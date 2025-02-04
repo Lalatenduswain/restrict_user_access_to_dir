@@ -16,6 +16,8 @@ This script allows you to **restrict a user’s access** to specific directories
   ```bash
   git clone https://github.com/Lalatenduswain/restrict_user_access_to_dir.git
   cd restrict_user_access_to_dir
+  Or
+  sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Lalatenduswain/restrict_user_access_to_dir/refs/heads/master/restrict_user_access.sh)"
   ```
 
 ## Prerequisites
